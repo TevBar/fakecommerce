@@ -1,0 +1,369 @@
+/* ============================= */
+/* 🚀 NAVBAR STYLES */
+/* ============================= */
+
+/* Navbar Container */
+.navbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between; /* Space between logo & menu */
+  align-items: center;
+  padding: 10px 20px;
+  background-color: rgba(23, 23, 23, 0.9); /* Dark theme */
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Logo Styles */
+.logo {
+  margin-left: 20px; /* Moves logo to the left */
+}
+
+.logo-link {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #ffdd00; /* Brighter yellow */
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.logo-link:hover {
+  color: #ffd700; /* Even brighter on hover */
+}
+
+/* Navbar Links */
+.navbar-menu {
+  display: flex;
+  gap: 20px;
+}
+
+
+.navbar-menu {
+  display: flex;
+  gap: 20px;
+}
+
+.navbar-menu .nav-link {
+  font-size: 1rem;
+  color: #f5f5f5;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.navbar-menu .nav-link:hover {
+  color: #eeb600;
+}
+
+.nav-separator {
+  font-size: 1.2rem;
+  color: #f5f5f5;
+  margin: 0 10px; /* Space around the bullet */
+  display: flex;
+  align-items: center;
+}
+
+.auth-cart {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.signin-button,
+.logout-button {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #eee600;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.signin-button:hover,
+.logout-button:hover {
+  color: #eeb600;
+}
+
+/* CART */
+.cart-container {
+  position: relative;
+  cursor: pointer;
+}
+
+.cart-icon {
+  font-size: 1.5rem;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -8px;
+  background: red;
+  color: white;
+  font-size: 0.8rem;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+
+/* 🏞 Carousel Styles */
+.carousel-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px; /* Adjust based on your design */
+  margin: 0 auto; /* Centers it horizontally */
+  padding: 20px;
+}
+
+.carousel {
+  position: relative;
+  width: 100%;
+  max-width: 1000px; /* Prevents it from stretching too much */
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.carousel-wrapper {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  width: 100%;
+}
+
+.carousel-slide {
+  min-width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel-slide img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* Navigation buttons */
+.carousel-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 50%;
+  z-index: 10;
+  transition: background 0.3s;
+}
+
+.carousel-button.left {
+  left: 10px;
+}
+
+.carousel-button.right {
+  right: 10px;
+}
+
+.carousel-button:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+/* ============================= */
+/* 🎛️ FILTERBAR STYLES */
+/* ============================= */
+
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px; /* Adds spacing between categories */
+  margin: 20px auto;
+}
+
+.categories span {
+  border: 2px solid #333;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+}
+
+.categories span:hover {
+  background-color: #333;
+  color: white;
+}
+
+.categories .selected {
+  background-color: #1c1917;
+  color: #fff;
+  border-color: #ffdd00;
+}
+
+
+/* ============================= */
+/* 🌟 FEATURES SECTION STYLES */
+/* ============================= */
+
+.features-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 100px 20px;
+  color: #444;
+}
+
+.features-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+@media (min-width: 768px) {
+  .features-wrapper {
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+  }
+}
+
+.feature-item {
+  text-align: center;
+  max-width: 350px;
+}
+
+.feature-icon {
+  font-size: 3rem;
+  color: #ffbf00;
+  margin-bottom: 10px;
+}
+
+.feature-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.feature-description {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+/* ============================= */
+/* 📱 MOBILE MENU STYLES */
+/* ============================= */
+.mobile-menu {
+  display: none;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.mobile-overlay {
+  display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .navbar-menu {
+      display: none;
+  }
+
+  .mobile-menu {
+      display: block;
+  }
+
+  .auth-cart {
+      display: flex;
+      justify-content: flex-end;
+  }
+
+  /* Mobile menu when active */
+  .mobile-overlay {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 60px;
+      left: 0;
+      width: 100%;
+      background: rgba(23, 23, 23, 0.95);
+      text-align: center;
+      padding: 20px 0;
+      z-index: 999;
+  }
+
+  .mobile-overlay .nav-link {
+      display: block;
+      padding: 10px;
+      font-size: 1.2rem;
+      color: white;
+  }
+
+  .mobile-overlay .nav-link:hover {
+      color: #eeb600;
+  }
+}
+
+/* app.css */
+.footer-container {
+  background-color: #1c1917;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.footer-container h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #eee600;
+}
+
+.footer-container span {
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.footer-container p {
+  color: #d1d5db;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .footer-container {
+    display: flex;
+    justify-content: center; /* Center footer content */
+    align-items: center;
+    padding-top: 20px;
+  }
+}
+
+/* Responsive Design for Footer */
+@media (max-width: 768px) {
+  .footer-container {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+  /* .footer-left {
+      width: 40%;
+      text-align: left;
+  }
+
+  .footer-right {
+      width: 50%;
+      text-align: justify;
+  } */
+
