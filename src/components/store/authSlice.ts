@@ -1,40 +1,37 @@
 // src/store/authSlice.ts
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-// Define the shape of the state
+// Define state shape
 interface AuthState {
-    token: string | null; // Token can be null initially or after logout
-    isCartVisible: boolean; // Cart visibility state
+  token: string | null;
+  isCartVisible: boolean;
 }
 
-// Set the initial state
+// Initial state
 const initialState: AuthState = {
-    token: null, // Initial token is null
-    isCartVisible: false, // Cart is hidden by default
+  token: null,
+  isCartVisible: false,
 };
 
-// Create the slice with proper typing
+// Create slice
 const authSlice = createSlice({
-    name: 'auth',
-    initialState,
-    reducers: {
-        // Action for setting the auth token (can be string or null)
-        setAuth: (state, action: PayloadAction<string | null>) => {
-            state.token = action.payload;
-        },
-        // Action for clearing the auth token (token is set to null)
-        clearAuth: (state) => {
-            state.token = null;
-        },
-        // Action for toggling the cart visibility
-        toggleCart: (state) => {
-            state.isCartVisible = !state.isCartVisible;
-        },
+  name: "auth",
+  initialState,
+  reducers: {
+    setAuth: (state, action: PayloadAction<string | null>) => {
+      state.token = action.payload;
     },
+    clearAuth: (state) => {
+      state.token = null;
+    },
+    toggleCart: (state) => {
+      state.isCartVisible = !state.isCartVisible;
+    },
+  },
 });
 
-// Export actions to use in components
+// Export actions
 export const { setAuth, clearAuth, toggleCart } = authSlice.actions;
 
-// Export the reducer to configure the store
-export const authReducer = authSlice.reducer;
+// ✅ Default export reducer
+export default authSlice.reducer;

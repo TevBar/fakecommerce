@@ -3,23 +3,22 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { toast } from "sonner";
 
 // Define the shape of a product in the cart
-interface CartProduct {
-  key: string; // Assuming 'key' is a unique identifier for each product
+export interface CartProduct {
+  key: string;
   name: string;
   price: number;
   quantity: number;
-  // Add any other properties that are relevant to a product
 }
 
-// Define the shape of the state, which is an array of CartProduct objects
-type CartState = CartProduct[];
+// Define the shape of the state (an array of products)
+export type CartState = CartProduct[];
 
-// Initial state is an empty array of products
+// Initial state
 const initialState: CartState = [];
 
 // Create the slice
 const cartSlice = createSlice({
-  name: 'cart',
+  name: "cart",
   initialState,
   reducers: {
     addToCart(state, action: PayloadAction<CartProduct>) {
@@ -54,8 +53,8 @@ const cartSlice = createSlice({
   },
 });
 
-// Export the actions
+// Export actions
 export const { addToCart, removeFromCart, increaseQuantity, decreaseQuantity } = cartSlice.actions;
 
-// Export the reducer
-export const cartReducer = cartSlice.reducer;
+// ✅ Default export reducer
+export default cartSlice.reducer;

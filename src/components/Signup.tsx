@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../firebase.config';
+import { auth } from '../firebase.config';
 import { useDispatch } from 'react-redux';
 import { setAuth } from './store/authSlice'; // Adjust path if needed
 import { toast } from 'react-toastify';
@@ -29,7 +29,7 @@ const Signup: React.FC = () => {
             // ✅ Correctly retrieve Firebase token
             const token = await user.getIdToken();
 
-            dispatch(setAuth({ token })); // Store token in Redux
+            dispatch(setAuth(token)); // Store token in Redux
             localStorage.setItem('token', token); // Store token in localStorage
 
             toast.success("Account created successfully!");

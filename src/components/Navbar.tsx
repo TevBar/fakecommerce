@@ -4,7 +4,7 @@ import { BsCart3 } from "react-icons/bs";
 import { CgMenuLeft, CgClose } from "react-icons/cg";
 import { Link, NavLink } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
-import { auth } from '../../firebase.config';
+import { auth } from '../firebase.config';
 import { useSelector, useDispatch } from 'react-redux';
 import { clearAuth, toggleCart } from './store/authSlice';
 import Cart from './Cart';
@@ -47,6 +47,9 @@ function Navbar() {
                 <li><NavLink to="/" className="nav-link">Home</NavLink></li>
                 <li><NavLink to="/products" className="nav-link">Categories</NavLink></li>
                 <li><NavLink to="/about" className="nav-link">About</NavLink></li>
+                <li><NavLink to="/profile" className="hover:text-gray-300">Profile</NavLink></li>
+                <li><NavLink to="/orders" className="text-blue-600 underline">View Order History</NavLink></li>
+                
             </ul>
 
             {/* Auth & Cart Section */}
@@ -71,3 +74,78 @@ function Navbar() {
 }
 
 export default Navbar;
+
+// import { toast } from 'react-toastify';
+// import { BsCart3 } from "react-icons/bs";
+// import { Link, NavLink } from 'react-router-dom';
+// import { signOut } from 'firebase/auth';
+// import { auth } from '../firebase.config';
+// import { useSelector, useDispatch } from 'react-redux';
+// import { clearAuth, toggleCart } from './store/authSlice';
+// import Cart from './Cart';
+
+// import { Navbar, Nav, Container, Button, Badge } from 'react-bootstrap';
+
+// function NavigationBar() {
+//     const usertoken = useSelector((state: { auth: { token: string | null } }) => state.auth?.token ?? null);
+//     interface CartItem {
+//         id: string;
+//         name: string;
+//         price: number;
+//         quantity: number;
+//     }
+
+//     const items = useSelector((state: { cart: Array<CartItem> }) => state.cart ?? []);
+//     const isCartVisible = useSelector((state: { auth: { isCartVisible: boolean } }) => state.auth?.isCartVisible ?? false);
+
+//     const dispatch = useDispatch();
+
+//     const handleLogout = async () => {
+//         try {
+//             await signOut(auth);
+//             dispatch(clearAuth());
+//             localStorage.removeItem('token');
+//             toast.warning("Logged out successfully!");
+//         } catch (err: any) {
+//             console.error("Signout Error ", err.message);
+//             toast.error("Logout error!");
+//         }
+//     };
+
+//     return (
+//         <>
+//             <Navbar bg="light" expand="lg" className="shadow-sm mb-4">
+//                 <Container>
+//                     <Navbar.Brand as={Link} to="/">ezmart</Navbar.Brand>
+//                     <Navbar.Toggle aria-controls="navbar-nav" />
+//                     <Navbar.Collapse id="navbar-nav">
+//                         <Nav className="me-auto">
+//                             <Nav.Link as={NavLink} to="/">Home</Nav.Link>
+//                             <Nav.Link as={NavLink} to="/products">Categories</Nav.Link>
+//                             <Nav.Link as={NavLink} to="/about">About</Nav.Link>
+//                             <Nav.Link as={NavLink} to="/profile">Profile</Nav.Link>
+//                             <Nav.Link as={NavLink} to="/orders">View Order History</Nav.Link>
+//                         </Nav>
+//                         <div className="d-flex align-items-center gap-3">
+//                             {usertoken ? (
+//                                 <Button variant="outline-danger" size="sm" onClick={handleLogout}>Logout</Button>
+//                             ) : (
+//                                 <Button as={Link} to="/auth" variant="outline-primary" size="sm">Sign In</Button>
+//                             )}
+//                             <div style={{ cursor: 'pointer', position: 'relative' }} onClick={() => dispatch(toggleCart())}>
+//                                 <BsCart3 size={22} />
+//                                 <Badge pill bg="primary" style={{ position: 'absolute', top: -5, right: -10 }}>
+//                                     {items.length}
+//                                 </Badge>
+//                             </div>
+//                         </div>
+//                     </Navbar.Collapse>
+//                 </Container>
+//             </Navbar>
+
+//             {isCartVisible && <Cart />}
+//         </>
+//     );
+// }
+
+// export default NavigationBar;

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../firebase.config';
+import { auth } from '../firebase.config';
 import { useDispatch } from 'react-redux';
 import { setAuth } from './store/authSlice'; // Adjust path if needed
 import { toast } from 'react-toastify';
@@ -16,6 +16,12 @@ function Login() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Validate email and password
+    if (!email || !password) {
+      toast.error('Email and password are required.');
+      return;
+    }
+
     try {
       const credentials = await signInWithEmailAndPassword(auth, email, password);
       const user = credentials.user;
@@ -23,12 +29,13 @@ function Login() {
       // Retrieve the token properly
       const token = await user.getIdToken();
 
-      dispatch(setAuth(token)); // Store token in Redux
+      dispatch(setAuth(token)); // Store token in Redux store
       localStorage.setItem('token', token); // Store token in localStorage
 
       toast.success('Logged in successfully!');
       navigate('/products');
     } catch (err) {
+      console.error('Login error:', err); // Log the error for debugging
       toast.error('Failed to log in. Please check your credentials.');
     }
   };
