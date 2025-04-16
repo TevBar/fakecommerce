@@ -81,7 +81,6 @@ const Checkout: React.FC = () => {
   const [paymentMethod, setPaymentMethod] = useState<string>("");
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
-  // ✅ Compute total based on Redux cart
   const total = useMemo(() => {
     return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   }, [cart]);
@@ -93,7 +92,6 @@ const Checkout: React.FC = () => {
     }
   }, [token, navigate]);
 
-  // ✅ Handle payment and send order to Firestore
   const handlePayment = async () => {
     if (!paymentMethod) {
       toast.error("Please select a payment method!");
@@ -109,11 +107,19 @@ const Checkout: React.FC = () => {
       return;
     }
 
+    // ✅ Map cart items to match expected shape
+    const mappedProducts = cart.map((item) => ({
+      productId: item.id || item.key || "", // fallback keys
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+    }));
+
     const firestoreOrder = {
       userId: currentUser.uid,
-      products: cart,
+      products: mappedProducts,
       totalPrice: total,
-      createdAt: "", // Firestore auto-generates this if needed
+      createdAt: new Date().toISOString(), // optional
     };
 
     try {
@@ -132,12 +138,11 @@ const Checkout: React.FC = () => {
     <div className="checkout-container">
       <h2>Checkout</h2>
 
-      {/* ✅ Real Order Summary */}
       <div className="order-summary">
         <h3>Order Summary</h3>
         <ul>
-          {cart.map((item) => (
-            <li key={item.key}>
+          {cart.map((item, index) => (
+            <li key={item.key || index}>
               {item.name} - {item.quantity} × ${item.price.toFixed(2)}
             </li>
           ))}
@@ -145,13 +150,13 @@ const Checkout: React.FC = () => {
         <p><strong>Total: ${total.toFixed(2)}</strong></p>
       </div>
 
-      {/* ✅ Payment Options */}
       <div className="payment-options">
         <label>
           <input
             type="radio"
             name="payment"
             value="paypal"
+            checked={paymentMethod === "paypal"}
             onChange={(e) => setPaymentMethod(e.target.value)}
           />
           PayPal
@@ -161,13 +166,17 @@ const Checkout: React.FC = () => {
             type="radio"
             name="payment"
             value="credit-card"
+            checked={paymentMethod === "credit-card"}
             onChange={(e) => setPaymentMethod(e.target.value)}
           />
           Credit Card
         </label>
       </div>
 
-      <button onClick={handlePayment} disabled={isProcessing}>
+      <button
+        onClick={handlePayment}
+        disabled={isProcessing || !paymentMethod}
+      >
         {isProcessing ? "Processing..." : "Confirm Payment"}
       </button>
     </div>
@@ -175,3 +184,6 @@ const Checkout: React.FC = () => {
 };
 
 export default Checkout;
+
+
+// command z twice to bring code back to what it was previously. 
