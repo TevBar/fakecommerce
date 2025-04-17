@@ -107,9 +107,9 @@ const Checkout: React.FC = () => {
       return;
     }
 
-    // ✅ Map cart items to match expected shape
+    // ✅ Safe mapping for productId
     const mappedProducts = cart.map((item) => ({
-      productId: item.id || item.key || "", // fallback keys
+      productId: String(item.id ?? item.key ?? "unknown"), // force string type
       name: item.name,
       price: item.price,
       quantity: item.quantity,
@@ -119,7 +119,7 @@ const Checkout: React.FC = () => {
       userId: currentUser.uid,
       products: mappedProducts,
       totalPrice: total,
-      createdAt: new Date().toISOString(), // optional
+      createdAt: new Date().toISOString(),
     };
 
     try {
@@ -186,4 +186,5 @@ const Checkout: React.FC = () => {
 export default Checkout;
 
 
-// command z twice to bring code back to what it was previously. 
+
+// command z three to bring code back to what it was previously. 
