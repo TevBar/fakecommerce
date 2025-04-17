@@ -125,23 +125,22 @@ const Checkout: React.FC = () => {
       return;
     }
 
-    // ✅ Properly map cart products and match expected OrderProduct type
+    // ✅ Map cart items to the correct OrderProduct structure
     const mappedProducts: OrderProduct[] = cart.map((item) => ({
-      productId: item.key, // 🔥 This fixes the build error
+      productId: item.key, // cart item key becomes productId
       name: item.name,
       price: item.price,
       quantity: item.quantity,
     }));
 
-    // ✅ Explicitly type this as Omit<Order, "id"> to match addOrder requirement
+    // ✅ Structure order correctly
     const firestoreOrder: Omit<Order, "id"> = {
       userId: currentUser.uid,
       products: mappedProducts,
       totalPrice: total,
       createdAt: new Date().toISOString(),
     };
-    await addOrder(firestoreOrder);
-    
+
     try {
       const orderId = await addOrder(firestoreOrder);
       toast.success(`Payment successful! Order ID: ${orderId}`);
@@ -204,6 +203,7 @@ const Checkout: React.FC = () => {
 };
 
 export default Checkout;
+
 
 
 
