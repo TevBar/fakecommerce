@@ -72,24 +72,8 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { RootState } from "../../components/store/store";
-import { addOrder } from "../../services/orderService";
+import { addOrder, Order } from "../../services/orderService"; // ✅ import shared Order type
 import { auth } from "../../firebase.config";
-
-// ✅ Matches the backend Order type (minus id)
-type OrderProduct = {
-  productId: string;
-  name: string;
-  quantity: number;
-  price: number;
-};
-
-type Order = {
-  id: string;
-  userId: string;
-  products: OrderProduct[];
-  totalPrice: number;
-  createdAt: string;
-};
 
 const Checkout: React.FC = () => {
   const token = useSelector((state: RootState) => state.auth.token);
@@ -125,15 +109,15 @@ const Checkout: React.FC = () => {
       return;
     }
 
-    // ✅ Map cart items to the correct OrderProduct structure
-    const mappedProducts: OrderProduct[] = cart.map((item) => ({
-      productId: item.key, // cart item key becomes productId
+    // ✅ Map cart to Order["products"] shape
+    const mappedProducts: Order["products"] = cart.map((item) => ({
+      productId: item.key,
       name: item.name,
       price: item.price,
       quantity: item.quantity,
     }));
 
-    // ✅ Structure order correctly
+    // ✅ This matches Omit<Order, "id">
     const firestoreOrder: Omit<Order, "id"> = {
       userId: currentUser.uid,
       products: mappedProducts,
@@ -203,7 +187,6 @@ const Checkout: React.FC = () => {
 };
 
 export default Checkout;
-
 
 
 
