@@ -65,6 +65,8 @@
 
 
 // src/pages/Checkout.tsx
+// src/components/pages/Checkout.tsx
+
 import React, { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -72,7 +74,22 @@ import { toast } from "react-toastify";
 import { RootState } from "../../components/store/store";
 import { addOrder } from "../../services/orderService";
 import { auth } from "../../firebase.config";
-import { Order } from "../../types"; // ✅ Make sure this exists if using strict typing
+
+// ✅ Matches the backend Order type (minus id)
+type OrderProduct = {
+  productId: string;
+  name: string;
+  quantity: number;
+  price: number;
+};
+
+type Order = {
+  id: string;
+  userId: string;
+  products: OrderProduct[];
+  totalPrice: number;
+  createdAt: string;
+};
 
 const Checkout: React.FC = () => {
   const token = useSelector((state: RootState) => state.auth.token);
@@ -108,15 +125,15 @@ const Checkout: React.FC = () => {
       return;
     }
 
-    // ✅ Map cart to correct shape for the Order type
-    const mappedProducts = cart.map((item) => ({
-      productId: String(item.id ?? item.key ?? "unknown"),
+    // ✅ Properly map cart products and match expected OrderProduct type
+    const mappedProducts: OrderProduct[] = cart.map((item) => ({
+      productId: item.key, // 🔥 This fixes the build error
       name: item.name,
       price: item.price,
       quantity: item.quantity,
     }));
 
-    // ✅ This is the important fix for Vercel: enforce the expected Order type (without id)
+    // ✅ Explicitly type this as Omit<Order, "id"> to match addOrder requirement
     const firestoreOrder: Omit<Order, "id"> = {
       userId: currentUser.uid,
       products: mappedProducts,
@@ -188,4 +205,6 @@ const Checkout: React.FC = () => {
 export default Checkout;
 
 
-// command z five to bring code back to what it was previously. 
+
+
+// command z four to bring code back to what it was previously. 
