@@ -110,12 +110,13 @@ const Checkout: React.FC = () => {
     }
 
     // ✅ Map cart to Order["products"] shape
-    const mappedProducts: Order["products"] = cart.map((item) => ({
+    const mappedProducts = cart.map((item): Order["products"][number] => ({
       productId: item.key,
       name: item.name,
       price: item.price,
       quantity: item.quantity,
     }));
+    
 
     // ✅ This matches Omit<Order, "id">
     const firestoreOrder: Omit<Order, "id"> = {
