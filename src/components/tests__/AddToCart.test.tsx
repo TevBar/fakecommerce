@@ -1,5 +1,5 @@
 // src/components/tests__/AddToCart.test.tsx
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, } from '@testing-library/react';
 import Products from '../pages/Products';
 import { Provider } from 'react-redux';
 import store from '../store/store';
