@@ -73,6 +73,14 @@ import { RootState } from "../../components/store/store";
 import { addOrder } from "../../services/orderService";
 import { auth } from "../../firebase.config";
 
+// ✅ Define the expected shape for order products
+type OrderProduct = {
+  productId: string;
+  name: string;
+  quantity: number;
+  price: number;
+};
+
 const Checkout: React.FC = () => {
   const token = useSelector((state: RootState) => state.auth.token);
   const cart = useSelector((state: RootState) => state.cart);
@@ -107,9 +115,9 @@ const Checkout: React.FC = () => {
       return;
     }
 
-    // ✅ Safe mapping for productId
-    const mappedProducts = cart.map((item) => ({
-      productId: String(item.id ?? item.key ?? "unknown"), // force string type
+    // ✅ Properly typed mapped products
+    const mappedProducts: OrderProduct[] = cart.map((item) => ({
+      productId: String(item.id ?? item.key ?? "unknown"),
       name: item.name,
       price: item.price,
       quantity: item.quantity,
