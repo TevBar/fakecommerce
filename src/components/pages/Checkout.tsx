@@ -72,14 +72,7 @@ import { toast } from "react-toastify";
 import { RootState } from "../../components/store/store";
 import { addOrder } from "../../services/orderService";
 import { auth } from "../../firebase.config";
-
-// ✅ Define the expected shape for order products
-type OrderProduct = {
-  productId: string;
-  name: string;
-  quantity: number;
-  price: number;
-};
+import { Order } from "../../types"; // ✅ Make sure this exists if using strict typing
 
 const Checkout: React.FC = () => {
   const token = useSelector((state: RootState) => state.auth.token);
@@ -115,15 +108,16 @@ const Checkout: React.FC = () => {
       return;
     }
 
-    // ✅ Properly typed mapped products
-    const mappedProducts: OrderProduct[] = cart.map((item) => ({
+    // ✅ Map cart to correct shape for the Order type
+    const mappedProducts = cart.map((item) => ({
       productId: String(item.id ?? item.key ?? "unknown"),
       name: item.name,
       price: item.price,
       quantity: item.quantity,
     }));
 
-    const firestoreOrder = {
+    // ✅ This is the important fix for Vercel: enforce the expected Order type (without id)
+    const firestoreOrder: Omit<Order, "id"> = {
       userId: currentUser.uid,
       products: mappedProducts,
       totalPrice: total,
@@ -194,5 +188,4 @@ const Checkout: React.FC = () => {
 export default Checkout;
 
 
-
-// command z three to bring code back to what it was previously. 
+// command z five to bring code back to what it was previously. 
