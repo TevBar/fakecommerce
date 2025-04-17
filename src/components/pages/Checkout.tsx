@@ -140,7 +140,8 @@ const Checkout: React.FC = () => {
       totalPrice: total,
       createdAt: new Date().toISOString(),
     };
-
+    await addOrder(firestoreOrder);
+    
     try {
       const orderId = await addOrder(firestoreOrder);
       toast.success(`Payment successful! Order ID: ${orderId}`);
