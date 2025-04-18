@@ -1,0 +1,141 @@
+/* Navbar.css */
+
+/* ========== Base Navbar Styles ========== */
+.navbar {
+    background-color: #2d3748; /* Dark background */
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
+    position: relative;
+    z-index: 100;
+  }
+  
+  /* ========== Logo ========== */
+  .logo a {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+  }
+  
+  /* ========== Nav Menu ========== */
+  .navbar-menu {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    gap: 25px;
+    margin: 0;
+  }
+  
+  /* Fix: Always show menu for desktop */
+  .navbar-menu.hidden {
+    display: flex !important;
+  }
+  
+  .navbar-menu.visible {
+    display: flex !important;
+  }
+  
+  /* ========== Nav Links ========== */
+  .nav-link {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    position: relative;
+    padding: 8px 12px;
+  }
+  
+  .nav-link:hover {
+    color: #ffed4a; /* Yellow on hover */
+  }
+  
+  /* ========== Dropdown ========== */
+  .dropdown {
+    position: relative;
+    cursor: pointer;
+  }
+  
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    color: black;
+    min-width: 180px;
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 6px 0;
+    z-index: 1000;
+  }
+  
+  .dropdown:hover .dropdown-menu {
+    display: block;
+  }
+  
+  .dropdown-menu li {
+    padding: 6px 0;
+  }
+  
+  .dropdown-menu a {
+    display: block;
+    padding: 10px 16px;
+    color: #2d3748;
+    text-decoration: none;
+  }
+  
+  .dropdown-menu a:hover {
+    background-color: #edf2f7;
+  }
+  
+  /* ========== Cart & Auth ========== */
+  .auth-cart {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .logout-button,
+  .signin-button {
+    background-color: #4299e1;
+    border: none;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  
+  .logout-button:hover,
+  .signin-button:hover {
+    background-color: #3182ce;
+  }
+  
+  .cart-container {
+    position: relative;
+    cursor: pointer;
+  }
+  
+  .cart-icon {
+    font-size: 1.5rem;
+    color: white;
+  }
+  
+  .cart-badge {
+    position: absolute;
+    top: -6px;
+    right: -10px;
+    background-color: red;
+    color: white;
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 50%;
+  }
+  
+  /* ========== Mobile Icon (Hidden for Web View) ========== */
+  .mobile-menu-icon {
+    display: none;
+  }
+  

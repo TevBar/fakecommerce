@@ -21,6 +21,7 @@ import { RootState } from './components/store/store';
 import { setAuth, clearAuth } from './components/store/authSlice';
 import { auth } from './firebase.config';
 import { onAuthStateChanged } from 'firebase/auth';
+import CategoryProducts from "./components/CategoryProducts";
 
 const App: React.FC = () => {
     const dispatch = useDispatch();
@@ -59,6 +60,7 @@ const App: React.FC = () => {
                 <Route path="/auth" element={<UserAuth />} />
                 <Route path="/profile" element={usertoken ? <Profile /> : <Navigate to="/auth" replace />} /> {/* ✅ Add Profile Route */}
                 <Route path="/checkout" element={usertoken ? <Checkout /> : <Navigate to="/auth" replace />} />
+                <Route path="/category/:categoryName" element={<CategoryProducts />} />
                 <Route path="/orders" element={<OrderHistory />} />
                 <Route path="/orders/:id" element={<OrderDetails />} />
                 <Route path="/*" element={<Page404 />} />

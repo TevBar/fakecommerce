@@ -2,10 +2,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // Define state shape
-interface AuthState {
+export interface AuthState {
   token: string | null;
   isCartVisible: boolean;
 }
+
+
 
 // Initial state
 const initialState: AuthState = {
@@ -35,3 +37,9 @@ export const { setAuth, clearAuth, toggleCart } = authSlice.actions;
 
 // ✅ Default export reducer
 export default authSlice.reducer;
+// recently added, may delete if you need to for export below
+// export type { AuthState };
+
+
+
+

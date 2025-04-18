@@ -8,6 +8,10 @@ import { auth } from '../firebase.config';
 import { useSelector, useDispatch } from 'react-redux';
 import { clearAuth, toggleCart } from './store/authSlice';
 import Cart from './Cart';
+import { categories } from '../constants/categories';
+import './Navbar.css';
+
+
 
 function Navbar() {
     const [isNavVisible, setIsNavVisible] = useState(true);
@@ -45,11 +49,26 @@ function Navbar() {
             {/* Navigation Links */}
             <ul className={`navbar-menu ${isNavVisible ? "hidden" : "visible"}`}>
                 <li><NavLink to="/" className="nav-link">Home</NavLink></li>
-                <li><NavLink to="/products" className="nav-link">Categories</NavLink></li>
+                
+                <li className="nav-link dropdown relative group">
+                    <span className="cursor-pointer">Categories</span>
+                    <ul className="dropdown-menu absolute hidden group-hover:block bg-white text-black mt-2 rounded shadow-md z-50 min-w-[180px]">
+                        {categories.map((category) => (
+                            <li key={category}>
+                                <NavLink
+                                    to={`/category/${encodeURIComponent(category)}`}
+                                    className="block px-4 py-2 hover:bg-gray-200"
+                                >
+                                    {category}
+                                </NavLink>
+                            </li>
+                        ))}
+                    </ul>
+                </li>
+
                 <li><NavLink to="/about" className="nav-link">About</NavLink></li>
                 <li><NavLink to="/profile" className="hover:text-gray-300">Profile</NavLink></li>
                 <li><NavLink to="/orders" className="text-blue-600 underline">View Order History</NavLink></li>
-                
             </ul>
 
             {/* Auth & Cart Section */}
