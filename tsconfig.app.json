@@ -7,9 +7,6 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-    
-    
-
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -19,6 +16,9 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
+    /* 👇 Add Jest & Node type definitions */
+    "types": ["jest", "node"],
+
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
@@ -26,5 +26,11 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src"]
+  "include": [
+    "src",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/components/tests__/**/*.ts",
+    "src/components/tests__/**/*.tsx"
+  ]
 }
