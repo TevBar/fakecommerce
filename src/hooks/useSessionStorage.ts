@@ -1,26 +1,31 @@
 // src/hooks/useSessionStorage.ts
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
-const useSessionStorage = (key, initialValue) => {
-  const [storedValue, setStoredValue] = useState(() => {
+function useSessionStorage<T>(key: string, initialValue: T): [T, (value: T) => void] {
+  const [storedValue, setStoredValue] = useState<T>(() => {
     try {
-      const item = window.sessionStorage.getItem(key);
+      const item = sessionStorage.getItem(key);
       return item ? JSON.parse(item) : initialValue;
     } catch (error) {
-      console.error(error);
+      console.error("Error reading sessionStorage key:", key, error);
       return initialValue;
     }
   });
 
-  useEffect(() => {
+  const setValue = (value: T) => {
     try {
-      window.sessionStorage.setItem(key, JSON.stringify(storedValue));
+      setStoredValue(value);
+      sessionStorage.setItem(key, JSON.stringify(value));
     } catch (error) {
-      console.error(error);
+      console.error("Error setting sessionStorage key:", key, error);
     }
+  };
+
+  useEffect(() => {
+    sessionStorage.setItem(key, JSON.stringify(storedValue));
   }, [key, storedValue]);
 
-  return [storedValue, setStoredValue];
-};
+  return [storedValue, setValue];
+}
 
 export default useSessionStorage;
