@@ -1,8 +1,12 @@
 // src/components/tests__/AddToCart.test.tsx
-import { render, screen, } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import Products from '../pages/Products';
 import { Provider } from 'react-redux';
 import store from '../store/store';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+// ✅ Create a QueryClient instance for testing
+const queryClient = new QueryClient();
 
 // ✅ MOCK the getProducts function (not fetchProducts!)
 jest.mock('../../services/productService', () => ({
@@ -23,9 +27,11 @@ jest.mock('../../services/productService', () => ({
 
 test('renders mocked product', async () => {
   render(
-    <Provider store={store}>
-      <Products />
-    </Provider>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <Products />
+      </Provider>
+    </QueryClientProvider>
   );
 
   // ✅ Wait for mocked product name to appear
