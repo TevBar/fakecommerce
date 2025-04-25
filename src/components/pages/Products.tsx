@@ -84,50 +84,60 @@
 
 
 // /components/pages/Products.tsx
-import React, { useEffect, useState } from "react";
+// src/components/admin/Products.tsx
+import React from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getProducts, deleteProduct } from "../../services/productService";
 import { toast } from "react-toastify";
 
 const Products: React.FC = () => {
-  const [products, setProducts] = useState<any[]>([]);
+  const queryClient = useQueryClient();
 
-  const fetchProducts = async () => {
-    try {
-      const data = await getProducts();
-      setProducts(data);
-    } catch {
-      toast.error("Failed to fetch products.");
-    }
-  };
+  // Fetch all products with React Query
+  const {
+    data: products = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["products"],
+    queryFn: getProducts, // 👈 from your productService
+  });
 
-  const handleDelete = async (id: string) => {
-    try {
-      await deleteProduct(id);
+  // Mutation for deleting a product
+  const deleteMutation = useMutation({
+    mutationFn: deleteProduct,
+    onSuccess: () => {
       toast.success("Product deleted!");
-      fetchProducts(); // Refresh the list
-    } catch {
+      queryClient.invalidateQueries({ queryKey: ["products"] }); // ✅ Refetch
+    },
+    onError: () => {
       toast.error("Failed to delete product.");
-    }
+    },
+  });
+
+  const handleDelete = (id: string) => {
+    deleteMutation.mutate(id);
   };
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  if (isLoading) return <div className="p-6">Loading products...</div>;
+  if (isError) return <div className="p-6 text-red-500">Error loading products.</div>;
 
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Products</h1>
       {products.length > 0 ? (
         <ul className="space-y-4">
-          {products.map(product => (
-            <li key={product.id} className="border p-4 rounded shadow flex justify-between items-center">
+          {products.map((product: any) => (
+            <li
+              key={product.id}
+              className="border p-4 rounded shadow flex justify-between items-center"
+            >
               <div>
                 <h3 className="font-semibold">{product.name}</h3>
                 <p>${product.price}</p>
               </div>
               <div className="space-x-2">
-                {/* ✏️ You can link to a form for updating here */}
-                <button 
+                <button
                   onClick={() => handleDelete(product.id)}
                   className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
                 >

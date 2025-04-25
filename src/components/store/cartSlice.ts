@@ -1,8 +1,8 @@
 // src/store/cartSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { getSessionCart, saveSessionCart } from "../../utils/sessionStorageUtils";
 import { toast } from "sonner";
 
-// Define the shape of a product in the cart
 export interface CartProduct {
   key: string;
   name: string;
@@ -10,13 +10,8 @@ export interface CartProduct {
   quantity: number;
 }
 
-// Define the shape of the state (an array of products)
-export type CartState = CartProduct[];
+const initialState: CartProduct[] = getSessionCart();
 
-// Initial state
-const initialState: CartState = [];
-
-// Create the slice
 const cartSlice = createSlice({
   name: "cart",
   initialState,
@@ -24,37 +19,40 @@ const cartSlice = createSlice({
     addToCart(state, action: PayloadAction<CartProduct>) {
       const existingProduct = state.find(product => product.key === action.payload.key);
       if (existingProduct) {
-        existingProduct.quantity += 1;
+        // ✅ Increase by the quantity in the payload, not just +1
+        existingProduct.quantity += action.payload.quantity;
       } else {
-        state.push({ ...action.payload, quantity: 1 });
+        state.push({ ...action.payload });
       }
+      saveSessionCart(state); // 🔁 Persist
       toast.success("Product added successfully!", {
         position: "bottom-right",
       });
     },
     removeFromCart(state, action: PayloadAction<string>) {
+      const newState = state.filter(item => item.key !== action.payload);
+      saveSessionCart(newState);
       toast.warning("Product removed successfully!", {
         position: "bottom-right",
       });
-      return state.filter(item => item.key !== action.payload);
+      return newState;
     },
     increaseQuantity(state, action: PayloadAction<string>) {
       const item = state.find(product => product.key === action.payload);
       if (item) {
         item.quantity += 1;
       }
+      saveSessionCart(state);
     },
     decreaseQuantity(state, action: PayloadAction<string>) {
       const item = state.find(product => product.key === action.payload);
       if (item && item.quantity > 1) {
         item.quantity -= 1;
       }
+      saveSessionCart(state);
     },
   },
 });
 
-// Export actions
 export const { addToCart, removeFromCart, increaseQuantity, decreaseQuantity } = cartSlice.actions;
-
-// ✅ Default export reducer
 export default cartSlice.reducer;

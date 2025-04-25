@@ -1,7 +1,7 @@
-export const categories = [
-    "men's clothing",
-    "women's clothing",
-    "electronics",
-    "jewelery"
-  ];
+// export const categories = [
+//     "men's clothing",
+//     "women's clothing",
+//     "electronics",
+//     "jewelery"
+//   ];
   
