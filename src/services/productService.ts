@@ -1,8 +1,11 @@
+// src/services/productService.ts
+
 import { db } from "../firebase.config";
 import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+// import { Product } from '../../types/product';
 
-// 🔥 Fetch all products
+// ✅ Fetch all products
 export const getProducts = async () => {
   try {
     console.log("Fetching products from Firestore...");
@@ -12,7 +15,10 @@ export const getProducts = async () => {
       console.warn("Firestore: No products found.");
     }
 
-    const products = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const products = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
     console.log("Fetched Products:", products);
     return products;
   } catch (error) {
@@ -21,21 +27,27 @@ export const getProducts = async () => {
   }
 };
 
-// ✅ Add a new product (auth required)
-export const addProduct = async (product: { name: string; price: number; stock: number; description: string }) => {
+// ✅ Add a new product (auth required) — now returns the new product ID
+export const addProduct = async (product: {
+  name: string;
+  price: number;
+  stock: number;
+  description: string;
+}) => {
   const user = getAuth().currentUser;
   if (!user) throw new Error("User not authenticated. Please sign in to add a product.");
 
   try {
     const docRef = await addDoc(collection(db, "products"), product);
     console.log("Product added with ID:", docRef.id);
+    return docRef.id; // ✅ Added: Return the new product ID
   } catch (error) {
     console.error("Error adding product:", error);
     throw error;
   }
 };
 
-// ✨ Add a test product (auth required)
+// ✅ Add a test product (auth required)
 export const addTestProduct = async () => {
   const user = getAuth().currentUser;
   if (!user) throw new Error("User not authenticated. Please sign in to add a test product.");
@@ -46,16 +58,26 @@ export const addTestProduct = async () => {
       name: "Sample Product",
       price: 25.99,
       stock: 5,
-      description: "This is a sample product."
+      description: "This is a sample product.",
     });
     console.log("Test product added successfully with ID:", docRef.id);
+    return docRef.id; // Optional: Return test product ID too
   } catch (error) {
     console.error("Error adding test product:", error);
+    throw error;
   }
 };
 
-// ✅ Update product (auth required)
-export const updateProduct = async (productId: string, newData: Partial<{ name: string; price: number; stock: number; description: string }>) => {
+// ✅ Update existing product (auth required)
+export const updateProduct = async (
+  productId: string,
+  newData: Partial<{
+    name: string;
+    price: number;
+    stock: number;
+    description: string;
+  }>
+) => {
   const user = getAuth().currentUser;
   if (!user) throw new Error("User not authenticated. Please sign in to update a product.");
 

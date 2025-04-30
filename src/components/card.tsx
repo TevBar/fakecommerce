@@ -1,3 +1,8 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
+
+
+
 interface CardProps {
   item: {
     id: number;
@@ -14,16 +19,33 @@ interface CardProps {
   className?: string;
 }
 
-function Card({ item, className }: CardProps) {
+const Card: React.FC<CardProps> = ({ item, className }) => {
+  const navigate = useNavigate();
+
+  const handleEdit = () => {
+    navigate(`/products/edit/${item.id}`);
+  };
+
   return (
-    <div className={`product ${className}`}>
-      <img src={item.src} alt={item.name} />
+    <div className={`product ${className || ""}`}>
+      <img src={item.src || "/default.jpg"} alt={item.name} />
       <h3>{item.name}</h3>
-      <p className="category">{item.cat}</p>
+      <p className="category">{item.cat || "Uncategorized"}</p>
       <p className="price">${item.price.toFixed(2)}</p>
-      <p className="rating">⭐ {item.rating.rate} ({item.rating.count} reviews)</p>
+
+      {item.rating && (
+        <p className="rating">
+          ⭐ {item.rating.rate} ({item.rating.count} reviews)
+        </p>
+      )}
+
+      {/* ✅ Edit Button */}
+      <button onClick={handleEdit} className="edit-btn">
+        Edit Product
+      </button>
     </div>
   );
-}
+};
 
 export default Card;
+

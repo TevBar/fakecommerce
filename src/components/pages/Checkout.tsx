@@ -67,15 +67,18 @@
 // src/pages/Checkout.tsx
 // src/components/pages/Checkout.tsx
 
+// src/components/pages/Checkout.tsx
 import React, { useEffect, useMemo, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";             // ← added useDispatch
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { RootState } from "../../components/store/store";
-import { addOrder, Order } from "../../services/orderService"; // ✅ import shared Order type
+import { addOrder, Order } from "../../services/orderService";
 import { auth } from "../../firebase.config";
+import { clearCart } from "../../components/store/cartSlice";       // ← import clearCart
 
 const Checkout: React.FC = () => {
+  const dispatch = useDispatch();                                    // ← initialize dispatch
   const token = useSelector((state: RootState) => state.auth.token);
   const cart = useSelector((state: RootState) => state.cart);
   const navigate = useNavigate();
@@ -101,7 +104,6 @@ const Checkout: React.FC = () => {
     }
 
     setIsProcessing(true);
-
     const currentUser = auth.currentUser;
     if (!currentUser) {
       toast.error("You must be logged in to place an order.");
@@ -109,26 +111,29 @@ const Checkout: React.FC = () => {
       return;
     }
 
-    // ✅ Map cart to Order["products"] shape
+    // map our CartProduct[] → Order["products"]
     const mappedProducts = cart.map((item): Order["products"][number] => ({
       productId: item.key,
-      name: item.name,
-      price: item.price,
-      quantity: item.quantity,
+      name:       item.name,
+      price:      item.price,
+      quantity:   item.quantity,
     }));
-    
 
-    // ✅ This matches Omit<Order, "id">
+    // build the payload for addOrder()
     const firestoreOrder: Omit<Order, "id"> = {
-      userId: currentUser.uid,
-      products: mappedProducts,
+      userId:     currentUser.uid,
+      products:   mappedProducts,
       totalPrice: total,
-      createdAt: new Date().toISOString(),
+      createdAt:  new Date().toISOString(),
     };
 
     try {
       const orderId = await addOrder(firestoreOrder);
       toast.success(`Payment successful! Order ID: ${orderId}`);
+
+      // ← clear cart from Redux & sessionStorage
+      dispatch(clearCart());
+
       setIsProcessing(false);
       navigate("/orders");
     } catch (err) {
@@ -138,16 +143,17 @@ const Checkout: React.FC = () => {
     }
   };
 
-  return token ? (
+  if (!token) return null;
+  return (
     <div className="checkout-container">
       <h2>Checkout</h2>
 
       <div className="order-summary">
         <h3>Order Summary</h3>
         <ul>
-          {cart.map((item, index) => (
-            <li key={item.key || index}>
-              {item.name} - {item.quantity} × ${item.price.toFixed(2)}
+          {cart.map((item, idx) => (
+            <li key={item.key || idx}>
+              {item.name} — {item.quantity} × ${item.price.toFixed(2)}
             </li>
           ))}
         </ul>
@@ -184,11 +190,10 @@ const Checkout: React.FC = () => {
         {isProcessing ? "Processing..." : "Confirm Payment"}
       </button>
     </div>
-  ) : null;
+  );
 };
 
 export default Checkout;
-
 
 
 

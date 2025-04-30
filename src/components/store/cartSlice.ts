@@ -17,42 +17,53 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart(state, action: PayloadAction<CartProduct>) {
-      const existingProduct = state.find(product => product.key === action.payload.key);
+      const existingProduct = state.find(p => p.key === action.payload.key);
       if (existingProduct) {
-        // ✅ Increase by the quantity in the payload, not just +1
         existingProduct.quantity += action.payload.quantity;
       } else {
-        state.push({ ...action.payload });
+        state.push({ ...action.payload, quantity: action.payload.quantity ?? 1 });
       }
-      saveSessionCart(state); // 🔁 Persist
-      toast.success("Product added successfully!", {
-        position: "bottom-right",
-      });
+      saveSessionCart(state);
+      toast.success("Product added successfully!", { position: "bottom-right" });
     },
+
     removeFromCart(state, action: PayloadAction<string>) {
-      const newState = state.filter(item => item.key !== action.payload);
-      saveSessionCart(newState);
-      toast.warning("Product removed successfully!", {
-        position: "bottom-right",
-      });
-      return newState;
+      const next = state.filter(item => item.key !== action.payload);
+      saveSessionCart(next);
+      toast.warning("Product removed successfully!", { position: "bottom-right" });
+      return next;
     },
+
     increaseQuantity(state, action: PayloadAction<string>) {
-      const item = state.find(product => product.key === action.payload);
+      const item = state.find(p => p.key === action.payload);
       if (item) {
         item.quantity += 1;
+        saveSessionCart(state);
       }
-      saveSessionCart(state);
     },
+
     decreaseQuantity(state, action: PayloadAction<string>) {
-      const item = state.find(product => product.key === action.payload);
+      const item = state.find(p => p.key === action.payload);
       if (item && item.quantity > 1) {
         item.quantity -= 1;
+        saveSessionCart(state);
       }
-      saveSessionCart(state);
+    },
+
+    // ← New reducer to clear the entire cart
+    clearCart() {
+      saveSessionCart([]);   // wipe sessionStorage
+      return [];             // reset Redux state
     },
   },
 });
 
-export const { addToCart, removeFromCart, increaseQuantity, decreaseQuantity } = cartSlice.actions;
+export const {
+  addToCart,
+  removeFromCart,
+  increaseQuantity,
+  decreaseQuantity,
+  clearCart,    // ← make sure to export it
+} = cartSlice.actions;
+
 export default cartSlice.reducer;

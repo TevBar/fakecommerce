@@ -89,6 +89,7 @@ import React from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getProducts, deleteProduct } from "../../services/productService";
 import { toast } from "react-toastify";
+// import { Product } from "../types/Product";
 
 const Products: React.FC = () => {
   const queryClient = useQueryClient();
