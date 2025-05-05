@@ -39,7 +39,7 @@ const Card: React.FC<CardProps> = ({ item, className }) => {
         </p>
       )}
 
-      {/* ✅ Edit Button */}
+      ✅ Edit Button
       <button onClick={handleEdit} className="edit-btn">
         Edit Product
       </button>

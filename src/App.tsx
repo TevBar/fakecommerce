@@ -64,6 +64,7 @@ const App: React.FC = () => {
                 {/* ✅ Product add/edit (optional: wrap in auth) */}
                 <Route path="/products/new" element={usertoken ? <ProductForm /> : <Navigate to="/auth" replace />} />
                 <Route path="/products/edit/:id" element={usertoken ? <ProductForm /> : <Navigate to="/auth" replace />} />
+                {/* code above taking me to product form and change this to become editPage and import edit product and change this to be editproduct page. instead of product form it should show edit product page */}
 
                 <Route path="/auth" element={<UserAuth />} />
                 <Route path="/profile" element={usertoken ? <Profile /> : <Navigate to="/auth" replace />} />
