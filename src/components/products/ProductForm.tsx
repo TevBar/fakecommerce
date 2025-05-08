@@ -1,21 +1,22 @@
 // src/components/product/ProductForm.tsx
-
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { addProduct, updateProduct } from "../../services/productService";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase.config";
+import "./ProductForm.css"; // optional CSS file
 
 interface ProductFormData {
   name: string;
   price: number;
   stock: number;
   description: string;
+  image?: string; // base64
 }
 
 const ProductForm: React.FC = () => {
-  const { id } = useParams(); // id will be undefined when adding
+  const { id } = useParams();
   const navigate = useNavigate();
   const isEditing = Boolean(id);
 
@@ -24,11 +25,11 @@ const ProductForm: React.FC = () => {
     price: 0,
     stock: 0,
     description: "",
+    image: "",
   });
 
   const [loading, setLoading] = useState(false);
 
-  // ✅ Efficiently load ONE product by ID
   useEffect(() => {
     const loadProductData = async (productId: string) => {
       try {
@@ -42,21 +43,13 @@ const ProductForm: React.FC = () => {
 
         const product = productSnap.data();
 
-        if (
-          typeof product.name === "string" &&
-          typeof product.price === "number" &&
-          typeof product.stock === "number" &&
-          typeof product.description === "string"
-        ) {
-          setFormData({
-            name: product.name,
-            price: product.price,
-            stock: product.stock,
-            description: product.description,
-          });
-        } else {
-          toast.error("Product data is incomplete.");
-        }
+        setFormData({
+          name: product.name,
+          price: product.price,
+          stock: product.stock,
+          description: product.description,
+          image: product.image || "",
+        });
       } catch (err) {
         console.error("Failed to load product:", err);
         toast.error("Failed to load product data.");
@@ -74,6 +67,17 @@ const ProductForm: React.FC = () => {
       ...prev,
       [name]: name === "price" || name === "stock" ? Number(value) : value,
     }));
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setFormData((prev) => ({ ...prev, image: reader.result as string }));
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -104,47 +108,34 @@ const ProductForm: React.FC = () => {
       <form onSubmit={handleSubmit} className="product-form">
         <label>
           Name:
-          <input
-            name="name"
-            type="text"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
+          <input name="name" type="text" value={formData.name} onChange={handleChange} required />
         </label>
 
         <label>
           Price:
-          <input
-            name="price"
-            type="number"
-            value={formData.price}
-            onChange={handleChange}
-            step="0.01"
-            required
-          />
+          <input name="price" type="number" value={formData.price} onChange={handleChange} step="0.01" required />
         </label>
 
         <label>
           Stock:
-          <input
-            name="stock"
-            type="number"
-            value={formData.stock}
-            onChange={handleChange}
-            required
-          />
+          <input name="stock" type="number" value={formData.stock} onChange={handleChange} required />
         </label>
 
         <label>
           Description:
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            rows={4}
-          />
+          <textarea name="description" value={formData.description} onChange={handleChange} rows={4} />
         </label>
+
+        <label>
+          Product Image:
+          <input type="file" accept="image/*" onChange={handleImageUpload} />
+        </label>
+
+        {formData.image && (
+          <div className="image-preview">
+            <img src={formData.image} alt="Preview" />
+          </div>
+        )}
 
         <button type="submit" disabled={loading}>
           {loading ? "Saving..." : isEditing ? "Update Product" : "Add Product"}
