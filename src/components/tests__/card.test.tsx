@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { MemoryRouter } from 'react-router-dom'; // ✅ import this
 import Card from '../card'; // adjust the path if needed
 
 const mockItem = {
@@ -17,23 +18,39 @@ const mockItem = {
 
 describe('Card Component', () => {
   test('renders product name', () => {
-    render(<Card item={mockItem} />);
+    render(
+      <MemoryRouter>
+        <Card item={mockItem} />
+      </MemoryRouter>
+    );
     expect(screen.getByText('Sample Product')).toBeInTheDocument();
   });
 
   test('displays price correctly', () => {
-    render(<Card item={mockItem} />);
+    render(
+      <MemoryRouter>
+        <Card item={mockItem} />
+      </MemoryRouter>
+    );
     expect(screen.getByText('$19.99')).toBeInTheDocument();
   });
 
   test('displays category and rating', () => {
-    render(<Card item={mockItem} />);
+    render(
+      <MemoryRouter>
+        <Card item={mockItem} />
+      </MemoryRouter>
+    );
     expect(screen.getByText('Electronics')).toBeInTheDocument();
     expect(screen.getByText(/⭐ 4.5 \(20 reviews\)/)).toBeInTheDocument();
   });
 
   test('renders image with correct alt text', () => {
-    render(<Card item={mockItem} />);
+    render(
+      <MemoryRouter>
+        <Card item={mockItem} />
+      </MemoryRouter>
+    );
     expect(screen.getByAltText('Sample Product')).toBeInTheDocument();
   });
 });
