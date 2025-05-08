@@ -126,7 +126,19 @@ function FeaturedProducts() {
       setIsLoading(true);
       try {
         const firestoreProducts = await getProducts();
-        setProducts(firestoreProducts);
+
+        // ✅ Type assertion: make sure the data matches the Product interface
+        const validProducts: Product[] = firestoreProducts.map((doc: any) => ({
+          id: doc.id,
+          name: doc.name,
+          price: doc.price,
+          stock: doc.stock,
+          description: doc.description,
+          category: doc.category || "Uncategorized",
+          image: doc.image || "/placeholder.png",
+        }));
+
+        setProducts(validProducts);
       } catch (error) {
         console.error("Error fetching products from Firestore:", error);
       } finally {
@@ -182,13 +194,13 @@ function FeaturedProducts() {
             <div key={product.id} className="product-card mb-6">
               <Card
                 item={{
-                  id: Number(product.id), // Optional: convert to number if needed
-                  src: product.image || "/placeholder.png",
+                  id: Number(product.id), // Optional if your Card expects a number
+                  src: product.image!,
                   name: product.name,
                   price: product.price,
                   cat: product.category || "Uncategorized",
                   desc: product.description,
-                  rating: { rate: 4.5, count: 10 }, // Placeholder
+                  rating: { rate: 4.5, count: 10 }, // Placeholder rating
                 }}
               />
               <div className="flex flex-col md:flex-row gap-3 mt-4">
@@ -220,4 +232,3 @@ function FeaturedProducts() {
 }
 
 export default FeaturedProducts;
-
