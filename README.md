@@ -1,54 +1,75 @@
-# React + TypeScript + Vite
+# 🛒 React E-Commerce Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive, modern e-commerce platform built with **React**, **Redux**, **React-Bootstrap**, and **Firebase**.
 
-Currently, two official plugins are available:
+## 🚀 Live Demo
+[Live Site URL](https://your-deployed-site.com)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 📦 Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- 🛍️ Product Catalog with categories
+- ➕ Add to Cart functionality
+- 📦 Stock and Inventory Management
+- ✏️ Admin Product CRUD operations
+- 🔐 Firebase Authentication (if included)
+- ⚡ Real-time updates with React Query
+- 🧪 Tested with React Testing Library and Jest
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🛠️ Technologies Used
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- **React 18** (Functional Components + Hooks)
+- **Redux** for state management
+- **Firebase Firestore** for backend
+- **React Query** for data fetching
+- **React-Bootstrap** for responsive UI
+- **React Router** for navigation
+- **Jest + React Testing Library** for unit/integration testing
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+---
+
+## 🧪 Testing
+
+### ✅ Unit Tests
+- `Card.test.tsx`: Tests rendering of product details and interactions.
+- `ProductForm.test.tsx`: Tests rendering of form fields and user input updates.
+
+### ✅ Integration Test
+- `AddToCart.test.tsx`: Simulates adding a product to the cart and verifies cart update.
+
+To run tests:
+
+```bash
+npm test
+⚙️ Setup Instructions
+Clone the repository
+
+bash
+Copy
+Edit
+git clone https://github.com/yourusername/your-repo.git
+cd your-repo
+Install dependencies
+
+bash
+Copy
+Edit
+npm install
+Start the development server
+
+bash
+Copy
+Edit
+npm start
+Set up Firebase Create a .env file and add your Firebase config:
+
+env
+Copy
+Edit
+REACT_APP_FIREBASE_API_KEY=your_key
+REACT_APP_FIREBASE_AUTH_DOMAIN=your_domain
+REACT_APP_FIREBASE_PROJECT_ID=your_id
+REACT_APP_FIREBASE_STORAGE_BUCKET=your_bucket
