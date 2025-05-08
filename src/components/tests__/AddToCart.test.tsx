@@ -1,14 +1,12 @@
-// src/components/tests__/AddToCart.test.tsx
-import { render, screen } from '@testing-library/react';
+// src/components/__tests__/AddToCart.test.tsx
+import { render, screen, waitFor } from '@testing-library/react';
 import Products from '../pages/Products';
 import { Provider } from 'react-redux';
 import store from '../store/store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-// ✅ Create a QueryClient instance for testing
-const queryClient = new QueryClient();
 
-// ✅ MOCK the getProducts function (not fetchProducts!)
+// ✅ Mock getProducts from productService
 jest.mock('../../services/productService', () => ({
   getProducts: jest.fn(() =>
     Promise.resolve([
@@ -19,26 +17,32 @@ jest.mock('../../services/productService', () => ({
         category: 'Toys',
         rating: 4.5,
         src: '/mock-image.jpg',
-      }
+      },
     ])
   ),
-  deleteProduct: jest.fn(() => Promise.resolve())
+  deleteProduct: jest.fn(() => Promise.resolve()),
 }));
 
-test('renders mocked product', async () => {
-  render(
-    <QueryClientProvider client={queryClient}>
-      <Provider store={store}>
-        <Products />
-      </Provider>
-    </QueryClientProvider>
-  );
+const queryClient = new QueryClient();
 
-  // ✅ Wait for mocked product name to appear
-  const productName = await screen.findByText(/Mock Product/i);
-  expect(productName).toBeInTheDocument();
+describe('Products Page', () => {
+  test('renders mocked product and delete button', async () => {
+    render(
+      <QueryClientProvider client={queryClient}>
+        <Provider store={store}>
+          <Products />
+        </Provider>
+      </QueryClientProvider>
+    );
 
-  // ✅ Optionally check for the delete button
-  const deleteButton = screen.getByRole('button', { name: /delete/i });
-  expect(deleteButton).toBeInTheDocument();
+    // ✅ Wait for product to appear
+    const productName = await screen.findByText(/Mock Product/i);
+    expect(productName).toBeInTheDocument();
+
+    // ✅ Check delete button exists
+    await waitFor(() => {
+      const deleteButton = screen.getByRole('button', { name: /delete/i });
+      expect(deleteButton).toBeInTheDocument();
+    });
+  });
 });
