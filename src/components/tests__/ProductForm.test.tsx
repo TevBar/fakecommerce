@@ -1,7 +1,18 @@
-// src/components/tests__/ProductForm.test.tsx
+// src/components/__tests__/ProductForm.test.tsx
 import { render, screen, fireEvent } from '@testing-library/react';
 import ProductForm from '../products/ProductForm';
 import { BrowserRouter } from 'react-router-dom';
+
+// ✅ Mock getEnv utility
+jest.mock('../../utils/getEnv', () => ({
+  getEnv: (key: string) => {
+    const mockEnv: Record<string, string> = {
+      VITE_FIREBASE_API_KEY: 'fake-firebase-key',
+      VITE_API_URL: 'https://mock-api.com',
+    };
+    return mockEnv[key] || '';
+  },
+}));
 
 describe('ProductForm Component', () => {
   test('renders empty form inputs for new product', () => {
