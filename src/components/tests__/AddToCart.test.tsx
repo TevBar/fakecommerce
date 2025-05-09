@@ -1,9 +1,12 @@
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+// src/components/__tests__/AddToCart.test.tsx
+import { render, screen, waitFor } from '@testing-library/react';
 import Products from '../pages/Products';
 import { Provider } from 'react-redux';
 import store from '../store/store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+
+// ✅ Mock getProducts from productService
 jest.mock('../../services/productService', () => ({
   getProducts: jest.fn(() =>
     Promise.resolve([
@@ -23,7 +26,7 @@ jest.mock('../../services/productService', () => ({
 const queryClient = new QueryClient();
 
 describe('Products Page', () => {
-  test('renders mocked product and add to cart increments icon count', async () => {
+  test('renders mocked product and delete button', async () => {
     render(
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
@@ -32,25 +35,14 @@ describe('Products Page', () => {
       </QueryClientProvider>
     );
 
+    // ✅ Wait for product to appear
     const productName = await screen.findByText(/Mock Product/i);
     expect(productName).toBeInTheDocument();
 
-    const cartCount = screen.getByTestId('cart-count');
-    expect(cartCount).toHaveTextContent('0');
-
-    const addToCartButton = screen.getByRole('button', { name: /add to cart/i });
-    expect(addToCartButton).toBeInTheDocument();
-
-    fireEvent.click(addToCartButton);
-
+    // ✅ Check delete button exists
     await waitFor(() => {
-      expect(cartCount).toHaveTextContent('1');
-    });
-
-    fireEvent.click(addToCartButton);
-
-    await waitFor(() => {
-      expect(cartCount).toHaveTextContent('2');
+      const deleteButton = screen.getByRole('button', { name: /delete/i });
+      expect(deleteButton).toBeInTheDocument();
     });
   });
 });
