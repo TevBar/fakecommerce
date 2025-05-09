@@ -1,17 +1,17 @@
-// src/components/__tests__/ProductForm.test.tsx
 import { render, screen, fireEvent } from '@testing-library/react';
 import ProductForm from '../products/ProductForm';
 import { BrowserRouter } from 'react-router-dom';
 
-// ✅ Mock getEnv utility
+// Mock the getEnv function to return a full config object
 jest.mock('../../utils/getEnv', () => ({
-  getEnv: (key: string) => {
-    const mockEnv: Record<string, string> = {
-      VITE_FIREBASE_API_KEY: 'fake-firebase-key',
-      VITE_API_URL: 'https://mock-api.com',
-    };
-    return mockEnv[key] || '';
-  },
+  getEnv: () => ({
+    apiKey: 'fake-api-key',
+    authDomain: 'fake-auth-domain',
+    projectId: 'fake-project-id',
+    storageBucket: 'fake-storage-bucket',
+    messagingSenderId: 'fake-sender-id',
+    appId: 'fake-app-id',
+  }),
 }));
 
 describe('ProductForm Component', () => {
