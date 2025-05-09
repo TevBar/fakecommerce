@@ -19,9 +19,9 @@ const cartSlice = createSlice({
     addToCart(state, action: PayloadAction<CartProduct>) {
       const existingProduct = state.find(p => p.key === action.payload.key);
       if (existingProduct) {
-        existingProduct.quantity += action.payload.quantity;
+        existingProduct.quantity += action.payload.quantity || 1;
       } else {
-        state.push({ ...action.payload, quantity: action.payload.quantity ?? 1 });
+        state.push({ ...action.payload, quantity: action.payload.quantity || 1 });
       }
       saveSessionCart(state);
       toast.success("Product added successfully!", { position: "bottom-right" });
@@ -29,8 +29,10 @@ const cartSlice = createSlice({
 
     removeFromCart(state, action: PayloadAction<string>) {
       const next = state.filter(item => item.key !== action.payload);
-      saveSessionCart(next);
-      toast.warning("Product removed successfully!", { position: "bottom-right" });
+      if (next.length !== state.length) {
+        saveSessionCart(next);
+        toast.warning("Product removed successfully!", { position: "bottom-right" });
+      }
       return next;
     },
 
@@ -50,10 +52,9 @@ const cartSlice = createSlice({
       }
     },
 
-    // ← New reducer to clear the entire cart
     clearCart() {
-      saveSessionCart([]);   // wipe sessionStorage
-      return [];             // reset Redux state
+      saveSessionCart([]);
+      return [];
     },
   },
 });
@@ -63,7 +64,7 @@ export const {
   removeFromCart,
   increaseQuantity,
   decreaseQuantity,
-  clearCart,    // ← make sure to export it
+  clearCart,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
