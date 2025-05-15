@@ -96,7 +96,7 @@
 
 
 
-import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToCart } from "./store/cartSlice";
@@ -104,7 +104,6 @@ import { getProducts } from "../services/productService"; // Firestore fetch
 import Card from "./card";
 import CardSkeleton from "./CardSkeleton";
 
-// Define Firestore product structure
 interface Product {
   id: string;
   name: string;
@@ -116,38 +115,30 @@ interface Product {
 }
 
 function FeaturedProducts() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchProductsFromFirestore = async () => {
-      setIsLoading(true);
-      try {
-        const firestoreProducts = await getProducts();
+  const {
+    data: products = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery<Product[]>({
+    queryKey: ["featuredProducts"],
+    queryFn: async () => {
+      const firestoreProducts = await getProducts();
 
-        // ✅ Type assertion: make sure the data matches the Product interface
-        const validProducts: Product[] = firestoreProducts.map((doc: any) => ({
-          id: doc.id,
-          name: doc.name,
-          price: doc.price,
-          stock: doc.stock,
-          description: doc.description,
-          category: doc.category || "Uncategorized",
-          image: doc.image || "/placeholder.png",
-        }));
-
-        setProducts(validProducts);
-      } catch (error) {
-        console.error("Error fetching products from Firestore:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchProductsFromFirestore();
-  }, []);
+      return firestoreProducts.map((doc: any) => ({
+        id: doc.id,
+        name: doc.name,
+        price: doc.price,
+        stock: doc.stock,
+        description: doc.description,
+        category: doc.category || "Uncategorized",
+        image: doc.image || "/placeholder.png",
+      }));
+    },
+  });
 
   const handleAddToCart = (product: Product) => {
     dispatch(
@@ -174,7 +165,6 @@ function FeaturedProducts() {
         Featured Products
       </h1>
 
-      {/* Admin-only Add Product button */}
       <div className="text-right mb-4">
         <button
           onClick={handleAddProduct}
@@ -187,20 +177,27 @@ function FeaturedProducts() {
       <div className="product-container">
         {isLoading ? (
           <div className="w-full flex flex-wrap justify-around mx-auto">
-            <CardSkeleton /> <CardSkeleton /> <CardSkeleton /> <CardSkeleton />
+            <CardSkeleton />
+            <CardSkeleton />
+            <CardSkeleton />
+            <CardSkeleton />
           </div>
+        ) : isError ? (
+          <p className="text-center text-red-500">
+            Error loading products: {(error as Error).message}
+          </p>
         ) : (
           products.map((product) => (
             <div key={product.id} className="product-card mb-6">
               <Card
                 item={{
-                  id: Number(product.id), // Optional if your Card expects a number
+                  id: Number(product.id),
                   src: product.image!,
                   name: product.name,
                   price: product.price,
                   cat: product.category || "Uncategorized",
                   desc: product.description,
-                  rating: { rate: 4.5, count: 10 }, // Placeholder rating
+                  rating: { rate: 4.5, count: 10 },
                 }}
               />
               <div className="flex flex-col md:flex-row gap-3 mt-4">
