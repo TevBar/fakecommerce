@@ -1,7 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-
-
 
 interface CardProps {
   item: {
@@ -17,13 +14,14 @@ interface CardProps {
     };
   };
   className?: string;
+  onDelete?: (id: number) => void; // 🔥 Add delete handler prop
 }
 
-const Card: React.FC<CardProps> = ({ item, className }) => {
-  const navigate = useNavigate();
-
-  const handleEdit = () => {
-    navigate(`/products/edit/${item.id}`);
+const Card: React.FC<CardProps> = ({ item, className, onDelete }) => {
+  const handleDelete = () => {
+    if (onDelete) {
+      onDelete(item.id);
+    }
   };
 
   return (
@@ -39,13 +37,15 @@ const Card: React.FC<CardProps> = ({ item, className }) => {
         </p>
       )}
 
-      ✅ Edit Button
-      <button onClick={handleEdit} className="edit-btn">
-        Edit Product
+      {/* ❌ Removed Edit Button | ✅ Added Remove Product */}
+      <button
+        onClick={handleDelete}
+        className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded mt-2"
+      >
+        🗑 Remove Product
       </button>
     </div>
   );
 };
 
 export default Card;
-

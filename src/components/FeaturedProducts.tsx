@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToCart } from "./store/cartSlice";
-import { getProducts } from "../services/productService"; // Firestore fetch
+import { getProducts, deleteProduct } from "../services/productService";
 import Card from "./card";
 import CardSkeleton from "./CardSkeleton";
 
@@ -16,6 +16,20 @@ interface Product {
   image?: string;
 }
 
+const fetchFeaturedProducts = async (): Promise<Product[]> => {
+  const firestoreProducts = await getProducts();
+
+  return firestoreProducts.map((doc: any) => ({
+    id: doc.id,
+    name: doc.name,
+    price: doc.price,
+    stock: doc.stock,
+    description: doc.description,
+    category: doc.category || "Uncategorized",
+    image: doc.image || "/placeholder.png",
+  }));
+};
+
 function FeaturedProducts() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -25,21 +39,10 @@ function FeaturedProducts() {
     isLoading,
     isError,
     error,
+    refetch,
   } = useQuery<Product[]>({
     queryKey: ["featuredProducts"],
-    queryFn: async () => {
-      const firestoreProducts = await getProducts();
-
-      return firestoreProducts.map((doc: any) => ({
-        id: doc.id,
-        name: doc.name,
-        price: doc.price,
-        stock: doc.stock,
-        description: doc.description,
-        category: doc.category || "Uncategorized",
-        image: doc.image || "/placeholder.png",
-      }));
-    },
+    queryFn: fetchFeaturedProducts,
   });
 
   const handleAddToCart = (product: Product) => {
@@ -59,6 +62,16 @@ function FeaturedProducts() {
 
   const handleAddProduct = () => {
     navigate("/products/new");
+  };
+
+  const handleDelete = async (productId: string) => {
+    try {
+      await deleteProduct(productId);
+      console.log(`Deleted product with ID: ${productId}`);
+      refetch(); // Refresh product list after deletion
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
   };
 
   return (
@@ -101,6 +114,7 @@ function FeaturedProducts() {
                   desc: product.description,
                   rating: { rate: 4.5, count: 10 },
                 }}
+                onDelete={() => handleDelete(product.id)}
               />
               <div className="flex flex-col md:flex-row gap-3 mt-4">
                 <button

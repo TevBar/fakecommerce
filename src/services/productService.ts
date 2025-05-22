@@ -1,9 +1,13 @@
-// src/services/productService.ts
-
 import { db } from "../firebase.config";
-import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+  updateDoc,
+  deleteDoc
+} from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-// import { Product } from '../../types/product';
 
 // ✅ Fetch all products
 export const getProducts = async () => {
@@ -19,6 +23,7 @@ export const getProducts = async () => {
       id: doc.id,
       ...doc.data(),
     }));
+
     console.log("Fetched Products:", products);
     return products;
   } catch (error) {
@@ -27,7 +32,7 @@ export const getProducts = async () => {
   }
 };
 
-// ✅ Add a new product (auth required) — now returns the new product ID
+// ✅ Add a new product (auth required) — returns the new product ID
 export const addProduct = async (product: {
   name: string;
   price: number;
@@ -40,7 +45,7 @@ export const addProduct = async (product: {
   try {
     const docRef = await addDoc(collection(db, "products"), product);
     console.log("Product added with ID:", docRef.id);
-    return docRef.id; // ✅ Added: Return the new product ID
+    return docRef.id;
   } catch (error) {
     console.error("Error adding product:", error);
     throw error;
@@ -61,7 +66,7 @@ export const addTestProduct = async () => {
       description: "This is a sample product.",
     });
     console.log("Test product added successfully with ID:", docRef.id);
-    return docRef.id; // Optional: Return test product ID too
+    return docRef.id;
   } catch (error) {
     console.error("Error adding test product:", error);
     throw error;

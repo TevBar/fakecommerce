@@ -1,6 +1,3 @@
-
-
-
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Card from "./card";
@@ -20,11 +17,15 @@ interface Product {
   };
 }
 
+// ✅ Moved outside component to avoid redefining on each render
 const fetchCategoryProducts = async (categoryName: string | undefined) => {
+  if (!categoryName) throw new Error("Category name is required");
+
   const res = await fetch(`https://fakestoreapi.com/products/category/${categoryName}`);
   if (!res.ok) {
-    throw new Error("Failed to fetch products");
+    throw new Error("Failed to fetch category products");
   }
+
   return res.json();
 };
 
@@ -39,8 +40,8 @@ function CategoryProducts() {
     error,
   } = useQuery<Product[]>({
     queryKey: ["categoryProducts", categoryName],
-    queryFn: () => fetchCategoryProducts(categoryName),
-    enabled: !!categoryName,
+    queryFn: () => fetchCategoryProducts(categoryName), // ✅ using the function with React Query
+    enabled: !!categoryName, // ✅ avoids calling with undefined
   });
 
   const handleAddToCart = (product: Product) => {
